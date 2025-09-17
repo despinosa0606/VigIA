@@ -1,0 +1,42 @@
+<div>
+  <h2>Consultar Solicitudes</h2>
+  <p><em>Los estados muestran el avance de la validación realizada por asistentes IA en cada dimensión.</em></p>
+  <form (submit)="searchSolicitudes()" style="display: flex; gap: 10px; flex-wrap: wrap;">
+    <input type="text" [(ngModel)]="searchProveedor" placeholder="Proveedor" style="flex:1;">
+    <input type="text" [(ngModel)]="searchNIT" placeholder="NIT" style="flex:1;">
+    <input type="date" [(ngModel)]="searchFecha" style="flex:1;">
+    <button type="submit" class="btn">Buscar</button>
+  </form>
+
+  <table *ngIf="solicitudes.length > 0">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Proveedor</th>
+        <th>Fecha</th>
+        <th>Dimensiones</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let solicitud of solicitudes">
+        <td>{{ solicitud.id }}</td>
+        <td>{{ solicitud.proveedor }}</td>
+        <td>{{ solicitud.fecha | date }}</td>
+        <td>
+          <div class="dimension-status">
+            <span class="status" [ngClass]="{'pending': solicitud.estado.economica === 'pending', 'done': solicitud.estado.economica === 'done'}">Económica</span>
+            <span class="status" [ngClass]="{'pending': solicitud.estado.social === 'pending', 'done': solicitud.estado.social === 'done'}">Social</span>
+            <span class="status" [ngClass]="{'pending': solicitud.estado.ambiental === 'pending', 'done': solicitud.estado.ambiental === 'done'}">Ambiental</span>
+          </div>
+        </td>
+        <td class="status" [ngClass]="solicitud.estado.general">{{ solicitud.estado.general }}</td>
+        <td>
+          <a (click)="verInforme(solicitud.id)" class="btn">Ver Informe</a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p *ngIf="solicitudes.length === 0">No se encontraron solicitudes.</p>
+</div>
